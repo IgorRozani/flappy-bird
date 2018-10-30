@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Flap Bird</title>
+    <title>Flappy Bird</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -41,6 +41,7 @@
         let player;
         let grounds;
         let gameOver;
+        let birdName;
 
         function preload() {
             this.load.image('background-day', 'assets/background-day.png');
@@ -54,24 +55,34 @@
                 frameWidth: 34,
                 frameHeight: 24
             });
-            // this.load.spritesheet('bird-blue', 'assets/bluebird-sprite.png', {frameWidth: 34, frameHeight: 24 });
-            // this.load.spritesheet('bird-yellow', 'assets/yellowbird-sprite.png', {frameWidth: 34, frameHeight: 24 });
+            this.load.spritesheet('bird-blue', 'assets/bluebird-sprite.png', {frameWidth: 34, frameHeight: 24 });
+            this.load.spritesheet('bird-yellow', 'assets/yellowbird-sprite.png', {frameWidth: 34, frameHeight: 24 });
         }
 
         function create() {
+
+            var birdValue = parseInt(Math.random() *3);
+            switch(birdValue){
+                case 0: birdName = 'bird-red'; break;
+                case 1: birdName = 'bird-blue'; break;
+                case 2: 
+                default: birdName = 'bird-yellow';
+            }
+
+
             this.add.image(144, 256, 'background-day');
 
             grounds = this.physics.add.staticGroup();
             grounds.create(144, 458, 'ground');
 
-            player = this.physics.add.sprite(80, 45, 'bird-red');
+            player = this.physics.add.sprite(80, 45, birdName);
 
             player.setBounce(0.2);
             player.setCollideWorldBounds(true);
 
             this.anims.create({
                 key: 'clap-wings',
-                frames: this.anims.generateFrameNumbers('bird-red', {
+                frames: this.anims.generateFrameNumbers(birdName, {
                     start: 0,
                     end: 2
                 }),
@@ -82,7 +93,7 @@
             this.anims.create({
                 key: 'stop',
                 frames: [{
-                    key: 'bird-red',
+                    key: birdName,
                     frame: 1
                 }],
                 frameRate: 20
@@ -99,7 +110,7 @@
             }
 
             if (cursors.up.isDown) {
-                player.setVelocityY(-220);
+                player.setVelocityY(-330);
                 player.angle = -15;
             } else {
                 player.setVelocityY(110);
