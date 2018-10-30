@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Flap Bird</title>
@@ -7,11 +8,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="img/favicon.png" type="image/png">
-    
+
 
     <script src="//cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script> -->
 </head>
+
 <body>
     <script type="text/javascript">
         var config = {
@@ -21,7 +23,9 @@
             physics: {
                 default: 'arcade',
                 arcade: {
-                    gravity: { y: 300 },
+                    gravity: {
+                        y: 300
+                    },
                     debug: false
                 }
             },
@@ -31,24 +35,30 @@
                 update: update
             }
         };
-    
+
         const game = new Phaser.Game(config);
         let cursors;
         let player;
         let grounds;
-        
-        function preload(){
+        let gameOver;
+
+        function preload() {
             this.load.image('background-day', 'assets/background-day.png');
             // this.load.image('background-night', 'assets/background-night.png');
 
+            this.load.image('game-over', 'assets/gameover.png');
+
             this.load.image('ground', 'assets/base.png');
 
-            this.load.spritesheet('bird-red', 'assets/redbird-sprite.png', { frameWidth: 34, frameHeight: 24 });
+            this.load.spritesheet('bird-red', 'assets/redbird-sprite.png', {
+                frameWidth: 34,
+                frameHeight: 24
+            });
             // this.load.spritesheet('bird-blue', 'assets/bluebird-sprite.png', {frameWidth: 34, frameHeight: 24 });
             // this.load.spritesheet('bird-yellow', 'assets/yellowbird-sprite.png', {frameWidth: 34, frameHeight: 24 });
         }
 
-        function create(){
+        function create() {
             this.add.image(144, 256, 'background-day');
 
             grounds = this.physics.add.staticGroup();
@@ -61,40 +71,56 @@
 
             this.anims.create({
                 key: 'clap-wings',
-                frames: this.anims.generateFrameNumbers('bird-red', { start: 0, end: 2 }),
+                frames: this.anims.generateFrameNumbers('bird-red', {
+                    start: 0,
+                    end: 2
+                }),
                 frameRate: 10,
                 repeat: -1
             });
-            
+
             this.anims.create({
                 key: 'stop',
-                frames: [ { key: 'bird-red', frame: 1 } ],
+                frames: [{
+                    key: 'bird-red',
+                    frame: 1
+                }],
                 frameRate: 20
             });
 
             cursors = this.input.keyboard.createCursorKeys();
 
-            this.physics.add.collider(player, grounds);
+            this.physics.add.collider(player, grounds, hitGround, null, this);
         }
 
-        function update(){
-            if(cursors.up.isDown){
-                player.setVelocityY(-220); 
-                player.angle =  -15;
+        function update() {
+            if (gameOver) {
+                return;
             }
-            else{
+
+            if (cursors.up.isDown) {
+                player.setVelocityY(-220);
+                player.angle = -15;
+            } else {
                 player.setVelocityY(110);
 
-                if(player.angle < 15)
-                {
-                    player.angle +=  1;
-                }
-                
+                if (player.angle < 15)
+                    player.angle += 1;
             }
 
             player.anims.play('clap-wings', true);
         }
 
+        function hitGround(player, grounds) {
+            this.physics.pause();
+
+            gameOver = true;
+
+            player.anims.play('stop');
+
+            this.add.image(144, 206, 'game-over');
+        }
     </script>
 </body>
+
 </html>
