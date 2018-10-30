@@ -26,7 +26,7 @@
                     gravity: {
                         y: 300
                     },
-                    debug: false
+                    debug: true
                 }
             },
             scene: {
@@ -42,6 +42,7 @@
         let grounds;
         let gameOver;
         let birdName;
+        let pipes;
 
         function preload() {
             this.load.image('background-day', 'assets/background-day.png');
@@ -55,28 +56,46 @@
                 frameWidth: 34,
                 frameHeight: 24
             });
-            this.load.spritesheet('bird-blue', 'assets/bluebird-sprite.png', {frameWidth: 34, frameHeight: 24 });
-            this.load.spritesheet('bird-yellow', 'assets/yellowbird-sprite.png', {frameWidth: 34, frameHeight: 24 });
+            this.load.spritesheet('bird-blue', 'assets/bluebird-sprite.png', {
+                frameWidth: 34,
+                frameHeight: 24
+            });
+            this.load.spritesheet('bird-yellow', 'assets/yellowbird-sprite.png', {
+                frameWidth: 34,
+                frameHeight: 24
+            });
+
+            this.load.image('green-pipe', 'assets/pipe-green.png');
         }
 
         function create() {
-
-            var birdValue = parseInt(Math.random() *3);
-            switch(birdValue){
-                case 0: birdName = 'bird-red'; break;
-                case 1: birdName = 'bird-blue'; break;
-                case 2: 
-                default: birdName = 'bird-yellow';
+            switch (parseInt(Math.random() * 3)) {
+                case 0:
+                    birdName = 'bird-red';
+                    break;
+                case 1:
+                    birdName = 'bird-blue';
+                    break;
+                case 2:
+                default:
+                    birdName = 'bird-yellow';
             }
 
-
             this.add.image(144, 256, 'background-day');
+
+            pipes = this.physics.add.group();
+            var pipeBottom = pipes.create(288, 524, 'green-pipe');
+            pipeBottom.setCollideWorldBounds(true);
+
+            var pipeTop = pipes.create(288,0, 'green-pipe');
+            pipeTop.setCollideWorldBounds(true);
+            pipeTop.angle = 180
+
 
             grounds = this.physics.add.staticGroup();
             grounds.create(144, 458, 'ground');
 
             player = this.physics.add.sprite(80, 45, birdName);
-
             player.setBounce(0.2);
             player.setCollideWorldBounds(true);
 
@@ -101,7 +120,9 @@
 
             cursors = this.input.keyboard.createCursorKeys();
 
-            this.physics.add.collider(player, grounds, hitGround, null, this);
+            this.physics.add.collider(player, grounds, hitBird, null, this);
+
+            this.physics.add.collider(player, pipes, hitBird, null, this);
         }
 
         function update() {
@@ -120,9 +141,15 @@
             }
 
             player.anims.play('clap-wings', true);
+
+
+            pipes.children.iterate(function (child) {
+                child.setVelocityX(-100);
+            });
+
         }
 
-        function hitGround(player, grounds) {
+        function hitBird(player) {
             this.physics.pause();
 
             gameOver = true;
