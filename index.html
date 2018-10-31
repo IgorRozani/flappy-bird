@@ -196,6 +196,10 @@
         }
 
         function moveBird() {
+            if (gameOver) {
+                return;
+            }
+
             player.setVelocityY(-400);
             player.angle = -15;
             framesMoveUp = 5;
