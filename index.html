@@ -43,6 +43,7 @@
         let gameOver;
         let birdName;
         let pipes;
+        let nextPipes = 0;
 
         function preload() {
             this.load.image('background-day', 'assets/background-day.png');
@@ -89,7 +90,7 @@
             grounds = this.physics.add.staticGroup();
             grounds.create(144, 458, 'ground');
 
-            player = this.physics.add.sprite(80, 45, birdName);
+            player = this.physics.add.sprite(80, 185, birdName);
             player.setBounce(0.2);
             player.setCollideWorldBounds(true);
 
@@ -136,13 +137,18 @@
 
             player.anims.play('clap-wings', true);
 
-
             pipes.children.iterate(function (child) {
                 if(child.active)
                     child.setVelocityX(-100);
                 else
                     child.setVelocityX(100);
             });
+
+            nextPipes++;
+            if(nextPipes === 130){
+                makePipes()
+                nextPipes = 0 
+            }
         }
 
         function hitBird(player) {
@@ -164,8 +170,6 @@
 
             var pipeBottom = pipes.create(288, pipeTopY + 420, 'green-pipe');
             pipeBottom.body.allowGravity = false;
-
-            
         }
     </script>
 </body>
