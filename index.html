@@ -45,12 +45,16 @@
         let upButton;
         let framesMoveUp = 0;
         let score = 0;
+        let currentPipeName;
+        let backgroundDay, backgroundNight;
+        const pipeGreenName = 'green-pipe'
+        const pipeRedName = 'red-pipe'
 
         function preload() {
             this.load.image('background-day', 'assets/background-day.png');
-            // this.load.image('background-night', 'assets/background-night.png');
+            this.load.image('background-night', 'assets/background-night.png');
 
-            this.load.image('teste', 'assets/teste.png');
+            this.load.image('gap', 'assets/gap.png');
 
             this.load.image('game-over', 'assets/gameover.png');
 
@@ -69,7 +73,8 @@
                 frameHeight: 24
             });
 
-            this.load.image('green-pipe', 'assets/pipe-green.png');
+            this.load.image(pipeGreenName, 'assets/pipe-green.png');
+            this.load.image(pipeRedName, 'assets/pipe-red.png')
         }
 
         function create() {
@@ -86,8 +91,13 @@
                     birdName = 'bird-yellow';
             }
 
-            const background = this.add.image(144, 256, 'background-day').setInteractive();
-            background.on('pointerdown', moveBird)
+            backgroundDay = this.add.image(144, 256, 'background-day').setInteractive();
+            backgroundDay.on('pointerdown', moveBird)
+            backgroundNight = this.add.image(144, 256, 'background-night').setInteractive();
+            backgroundNight.visible = false
+            backgroundNight.on('pointerdown', moveBird)
+
+            currentPipeName = pipeGreenName
 
             gaps = this.physics.add.group();
             pipes = this.physics.add.group();
@@ -178,19 +188,30 @@
         function updateScore(_, gap) {
             score++;
             gap.destroy()
+
+            if(score % 10 == 0)
+            {
+                backgroundDay.visible = !backgroundDay.visible 
+                backgroundNight.visible = !backgroundNight.visible 
+
+                if(currentPipeName === pipeGreenName)
+                    currentPipeName = pipeRedName
+                else
+                    currentPipeName = pipeGreenName
+            }
         }
 
         function makePipes() {
             const pipeTopY = Phaser.Math.Between(-120, 120)
 
-            const gap = gaps.create(288, pipeTopY + 210, 'teste', null, false)
+            const gap = gaps.create(288, pipeTopY + 210, 'gap', null, false)
             gap.body.allowGravity = false;
 
-            const pipeTop = pipes.create(288, pipeTopY, 'green-pipe');
+            const pipeTop = pipes.create(288, pipeTopY, currentPipeName);
             pipeTop.body.allowGravity = false;
             pipeTop.angle = 180;
 
-            const pipeBottom = pipes.create(288, pipeTopY + 420, 'green-pipe');
+            const pipeBottom = pipes.create(288, pipeTopY + 420, currentPipeName);
             pipeBottom.body.allowGravity = false;
         }
 
