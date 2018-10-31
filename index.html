@@ -40,13 +40,17 @@
         let player;
         let gameOver;
         let pipes;
+        let gaps;
         let nextPipes = 0;
         let upButton;
         let framesMoveUp = 0;
+        let score = 0;
 
         function preload() {
             this.load.image('background-day', 'assets/background-day.png');
             // this.load.image('background-night', 'assets/background-night.png');
+
+            this.load.image('teste', 'assets/teste.png');
 
             this.load.image('game-over', 'assets/gameover.png');
 
@@ -85,6 +89,7 @@
             const background = this.add.image(144, 256, 'background-day').setInteractive();
             background.on('pointerdown', moveBird)
 
+            gaps = this.physics.add.group();
             pipes = this.physics.add.group();
             makePipes()
 
@@ -118,6 +123,8 @@
 
             this.physics.add.collider(player, grounds, hitBird, null, this);
             this.physics.add.collider(player, pipes, hitBird, null, this);
+
+            this.physics.add.overlap(player, gaps, updateScore, null, this);
         }
 
         function update() {
@@ -142,6 +149,10 @@
                 child.setVelocityX(-100);
             });
 
+            gaps.children.iterate(function (child) {
+                child.setVelocityX(-100);
+            });
+
             nextPipes++;
             if (nextPipes === 130) {
                 makePipes()
@@ -159,8 +170,16 @@
             this.add.image(144, 206, 'game-over');
         }
 
+        function updateScore(_, gap) {
+            score++;
+            gap.destroy()
+        }
+
         function makePipes() {
             const pipeTopY = Phaser.Math.Between(-120, 120)
+
+            const gap = gaps.create(288, pipeTopY + 210, 'teste', null, false)
+            gap.body.allowGravity = false;
 
             const pipeTop = pipes.create(288, pipeTopY, 'green-pipe');
             pipeTop.body.allowGravity = false;
