@@ -9,9 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="img/favicon.png" type="image/png">
 
-
     <script src="//cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script> -->
 </head>
 
 <body>
@@ -26,7 +24,7 @@
                     gravity: {
                         y: 300
                     },
-                    debug: true
+                    debug: false
                 }
             },
             scene: {
@@ -49,6 +47,7 @@
         let backgroundDay, backgroundNight;
         const pipeGreenName = 'green-pipe'
         const pipeRedName = 'red-pipe'
+        let scoreboard
 
         function preload() {
             this.load.image('background-day', 'assets/background-day.png');
@@ -75,6 +74,17 @@
 
             this.load.image(pipeGreenName, 'assets/pipe-green.png');
             this.load.image(pipeRedName, 'assets/pipe-red.png')
+
+            this.load.image('number0', 'assets/0.png')
+            this.load.image('number1', 'assets/1.png')
+            this.load.image('number2', 'assets/2.png')
+            this.load.image('number3', 'assets/3.png')
+            this.load.image('number4', 'assets/4.png')
+            this.load.image('number5', 'assets/5.png')
+            this.load.image('number6', 'assets/6.png')
+            this.load.image('number7', 'assets/7.png')
+            this.load.image('number8', 'assets/8.png')
+            this.load.image('number9', 'assets/9.png')
         }
 
         function create() {
@@ -137,6 +147,9 @@
             this.physics.add.overlap(player, gaps, updateScore, null, this);
 
             player.anims.play('clap-wings', true);
+
+            scoreboard = this.physics.add.staticGroup();
+            scoreboard.create(144, 30, 'number0');
         }
 
         function update() {
@@ -156,9 +169,9 @@
             }
 
             pipes.children.iterate(function (child) {
-                if(child == undefined) return;
-                
-                if(child.x < -50)
+                if (child == undefined) return;
+
+                if (child.x < -50)
                     child.destroy();
                 else
                     child.setVelocityX(-100);
@@ -189,15 +202,28 @@
             score++;
             gap.destroy()
 
-            if(score % 10 == 0)
-            {
-                backgroundDay.visible = !backgroundDay.visible 
-                backgroundNight.visible = !backgroundNight.visible 
+            if (score % 10 == 0) {
+                backgroundDay.visible = !backgroundDay.visible
+                backgroundNight.visible = !backgroundNight.visible
 
-                if(currentPipeName === pipeGreenName)
+                if (currentPipeName === pipeGreenName)
                     currentPipeName = pipeRedName
                 else
                     currentPipeName = pipeGreenName
+            }
+
+            scoreboard.clear(true, true)
+
+            var scoreAsString = score.toString();
+            if (scoreAsString.length == 1)
+                scoreboard.create(144, 30, 'number' + score).setDepth(10);
+            else {
+                var initialPosition = 144 - ((score.toString().length * 25) / 2);
+
+                for(var i = 0; i < scoreAsString.length; i++){
+                    scoreboard.create(initialPosition, 30, 'number' + scoreAsString[i]).setDepth(10);
+                    initialPosition += 25
+                }
             }
         }
 
