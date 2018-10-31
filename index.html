@@ -125,6 +125,8 @@
             this.physics.add.collider(player, pipes, hitBird, null, this);
 
             this.physics.add.overlap(player, gaps, updateScore, null, this);
+
+            player.anims.play('clap-wings', true);
         }
 
         function update() {
@@ -143,9 +145,6 @@
                     player.angle += 1;
             }
 
-            player.anims.play('clap-wings', true);
-
-            console.log('linha')
             pipes.children.iterate(function (child) {
                 if(child == undefined) return;
                 
