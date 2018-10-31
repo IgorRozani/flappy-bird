@@ -70,7 +70,7 @@
         }
 
         function create() {
-            switch (parseInt(Math.random() * 3)) {
+            switch (Phaser.Math.Between(0, 2)) {
                 case 0:
                     birdName = 'bird-red';
                     break;
@@ -139,16 +139,16 @@
             player.anims.play('clap-wings', true);
 
             pipes.children.iterate(function (child) {
-                if(child.active)
+                if (child.active)
                     child.setVelocityX(-100);
                 else
                     child.setVelocityX(100);
             });
 
             nextPipes++;
-            if(nextPipes === 130){
+            if (nextPipes === 130) {
                 makePipes()
-                nextPipes = 0 
+                nextPipes = 0
             }
         }
 
@@ -162,9 +162,9 @@
             this.add.image(144, 206, 'game-over');
         }
 
-        function makePipes(){
-            var pipeTopY = Phaser.Math.Between(-120,120)
-            
+        function makePipes() {
+            var pipeTopY = Phaser.Math.Between(-120, 120)
+
             var pipeTop = pipes.create(288, pipeTopY, 'green-pipe');
             pipeTop.body.allowGravity = false;
             pipeTop.angle = 180;
