@@ -37,11 +37,8 @@
         };
 
         const game = new Phaser.Game(config);
-        let cursors;
         let player;
-        let grounds;
         let gameOver;
-        let birdName;
         let pipes;
         let nextPipes = 0;
         let upButton;
@@ -72,6 +69,7 @@
         }
 
         function create() {
+            let birdName;
             switch (Phaser.Math.Between(0, 2)) {
                 case 0:
                     birdName = 'bird-red';
@@ -84,18 +82,17 @@
                     birdName = 'bird-yellow';
             }
 
-            var background = this.add.image(144, 256, 'background-day').setInteractive();
+            const background = this.add.image(144, 256, 'background-day').setInteractive();
             background.on('pointerdown', moveBird)
 
             pipes = this.physics.add.group();
             makePipes()
 
-            grounds = this.physics.add.staticGroup();
-            var ground = grounds.create(144, 458, 'ground');
+            const grounds = this.physics.add.staticGroup();
+            const ground = grounds.create(144, 458, 'ground');
             ground.setDepth(10);
 
             player = this.physics.add.sprite(80, 185, birdName);
-            player.setBounce(0.2);
             player.setCollideWorldBounds(true);
 
             this.anims.create({
@@ -117,7 +114,6 @@
                 frameRate: 20
             });
 
-            cursors = this.input.keyboard.createCursorKeys();
             upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP)
 
             this.physics.add.collider(player, grounds, hitBird, null, this);
@@ -164,13 +160,13 @@
         }
 
         function makePipes() {
-            var pipeTopY = Phaser.Math.Between(-120, 120)
+            const pipeTopY = Phaser.Math.Between(-120, 120)
 
-            var pipeTop = pipes.create(288, pipeTopY, 'green-pipe');
+            const pipeTop = pipes.create(288, pipeTopY, 'green-pipe');
             pipeTop.body.allowGravity = false;
             pipeTop.angle = 180;
 
-            var pipeBottom = pipes.create(288, pipeTopY + 420, 'green-pipe');
+            const pipeBottom = pipes.create(288, pipeTopY + 420, 'green-pipe');
             pipeBottom.body.allowGravity = false;
         }
 
