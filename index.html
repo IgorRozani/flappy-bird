@@ -145,8 +145,14 @@
 
             player.anims.play('clap-wings', true);
 
+            console.log('linha')
             pipes.children.iterate(function (child) {
-                child.setVelocityX(-100);
+                if(child == undefined) return;
+                
+                if(child.x < -50)
+                    child.destroy();
+                else
+                    child.setVelocityX(-100);
             });
 
             gaps.children.iterate(function (child) {
