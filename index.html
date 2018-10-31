@@ -84,13 +84,7 @@
             this.add.image(144, 256, 'background-day');
 
             pipes = this.physics.add.group();
-            var pipeBottom = pipes.create(288, 524, 'green-pipe');
-            pipeBottom.setCollideWorldBounds(true);
-
-            var pipeTop = pipes.create(288,0, 'green-pipe');
-            pipeTop.setCollideWorldBounds(true);
-            pipeTop.angle = 180
-
+            makePipes()
 
             grounds = this.physics.add.staticGroup();
             grounds.create(144, 458, 'ground');
@@ -144,9 +138,11 @@
 
 
             pipes.children.iterate(function (child) {
-                child.setVelocityX(-100);
+                if(child.active)
+                    child.setVelocityX(-100);
+                else
+                    child.setVelocityX(100);
             });
-
         }
 
         function hitBird(player) {
@@ -157,6 +153,19 @@
             player.anims.play('stop');
 
             this.add.image(144, 206, 'game-over');
+        }
+
+        function makePipes(){
+            var pipeTopY = Phaser.Math.Between(-120,120)
+            
+            var pipeTop = pipes.create(288, pipeTopY, 'green-pipe');
+            pipeTop.body.allowGravity = false;
+            pipeTop.angle = 180;
+
+            var pipeBottom = pipes.create(288, pipeTopY + 420, 'green-pipe');
+            pipeBottom.body.allowGravity = false;
+
+            
         }
     </script>
 </body>
