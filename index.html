@@ -88,7 +88,8 @@
             makePipes()
 
             grounds = this.physics.add.staticGroup();
-            grounds.create(144, 458, 'ground');
+            var ground = grounds.create(144, 458, 'ground');
+            ground.setDepth(10);
 
             player = this.physics.add.sprite(80, 185, birdName);
             player.setBounce(0.2);
