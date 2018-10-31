@@ -44,6 +44,8 @@
         let birdName;
         let pipes;
         let nextPipes = 0;
+        let upButton;
+        let framesMoveUp = 0;
 
         function preload() {
             this.load.image('background-day', 'assets/background-day.png');
@@ -115,9 +117,9 @@
             });
 
             cursors = this.input.keyboard.createCursorKeys();
+            upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP)
 
             this.physics.add.collider(player, grounds, hitBird, null, this);
-
             this.physics.add.collider(player, pipes, hitBird, null, this);
         }
 
@@ -125,24 +127,24 @@
             if (gameOver) {
                 return;
             }
-
-            if (cursors.up.isDown) {
-                player.setVelocityY(-330);
+            
+            if(framesMoveUp > 0){
+                framesMoveUp--;
+            }else if (Phaser.Input.Keyboard.JustDown(upButton)) {
+                player.setVelocityY(-400);
                 player.angle = -15;
+                framesMoveUp = 5;
             } else {
                 player.setVelocityY(110);
 
-                if (player.angle < 15)
+                if (player.angle < 90)
                     player.angle += 1;
             }
 
             player.anims.play('clap-wings', true);
 
             pipes.children.iterate(function (child) {
-                if (child.active)
-                    child.setVelocityX(-100);
-                else
-                    child.setVelocityX(100);
+                child.setVelocityX(-100);
             });
 
             nextPipes++;
