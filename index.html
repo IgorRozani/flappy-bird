@@ -84,7 +84,8 @@
                     birdName = 'bird-yellow';
             }
 
-            this.add.image(144, 256, 'background-day');
+            var background = this.add.image(144, 256, 'background-day').setInteractive();
+            background.on('pointerdown', moveBird)
 
             pipes = this.physics.add.group();
             makePipes()
@@ -127,13 +128,11 @@
             if (gameOver) {
                 return;
             }
-            
-            if(framesMoveUp > 0){
+
+            if (framesMoveUp > 0) {
                 framesMoveUp--;
-            }else if (Phaser.Input.Keyboard.JustDown(upButton)) {
-                player.setVelocityY(-400);
-                player.angle = -15;
-                framesMoveUp = 5;
+            } else if (Phaser.Input.Keyboard.JustDown(upButton)) {
+                moveBird()
             } else {
                 player.setVelocityY(110);
 
@@ -173,6 +172,12 @@
 
             var pipeBottom = pipes.create(288, pipeTopY + 420, 'green-pipe');
             pipeBottom.body.allowGravity = false;
+        }
+
+        function moveBird() {
+            player.setVelocityY(-400);
+            player.angle = -15;
+            framesMoveUp = 5;
         }
     </script>
 </body>
