@@ -1,4 +1,4 @@
-var config = {
+const config = {
     type: Phaser.AUTO,
     width: 288,
     height: 512,
@@ -18,20 +18,31 @@ var config = {
     }
 }
 
+// Game
 const game = new Phaser.Game(config)
-let player
 let gameOver
+let upButton
+const widthMiddle = 144
+// Bird
+let player
+let framesMoveUp = 0
+const birdRedName = 'bird-red'
+const birdYellowName = 'bird-yellow'
+const birdBlueName = 'bird-blue'
+// Background
+let backgroundDay
+let backgroundNight
+// pipes
 let pipes
 let gaps
 let nextPipes = 0
-let upButton
-let framesMoveUp = 0
-let score = 0
-let currentPipeName
-let backgroundDay, backgroundNight
 const pipeGreenName = 'green-pipe'
 const pipeRedName = 'red-pipe'
+let currentPipeName = pipeGreenName
+// score variables
 let scoreboard
+let score = 0
+const numberWidth = 25
 
 function preload() {
     // Backgrounds and ground
@@ -39,7 +50,7 @@ function preload() {
     this.load.image('background-night', 'assets/background-night.png')
     this.load.image('ground', 'assets/base.png')
 
-    // Pipes and gap
+    // Pipes
     this.load.image(pipeGreenName, 'assets/pipe-green.png')
     this.load.image(pipeRedName, 'assets/pipe-red.png')
     this.load.image('gap', 'assets/gap.png')
@@ -49,15 +60,15 @@ function preload() {
     this.load.image('restart-button', 'assets/restart-button.png')
 
     // Birds
-    this.load.spritesheet('bird-red', 'assets/redbird-sprite.png', {
+    this.load.spritesheet(birdRedName, 'assets/redbird-sprite.png', {
         frameWidth: 34,
         frameHeight: 24
     })
-    this.load.spritesheet('bird-blue', 'assets/bluebird-sprite.png', {
+    this.load.spritesheet(birdBlueName, 'assets/bluebird-sprite.png', {
         frameWidth: 34,
         frameHeight: 24
     })
-    this.load.spritesheet('bird-yellow', 'assets/yellowbird-sprite.png', {
+    this.load.spritesheet(birdYellowName, 'assets/yellowbird-sprite.png', {
         frameWidth: 34,
         frameHeight: 24
     })
@@ -78,20 +89,18 @@ function preload() {
 function create() {
     const birdName = getRandomBird()
 
-    backgroundDay = this.add.image(144, 256, 'background-day').setInteractive();
+    backgroundDay = this.add.image(widthMiddle, 256, 'background-day').setInteractive();
     backgroundDay.on('pointerdown', moveBird)
-    backgroundNight = this.add.image(144, 256, 'background-night').setInteractive();
+    backgroundNight = this.add.image(widthMiddle, 256, 'background-night').setInteractive();
     backgroundNight.visible = false
     backgroundNight.on('pointerdown', moveBird)
-
-    currentPipeName = pipeGreenName
 
     gaps = this.physics.add.group()
     pipes = this.physics.add.group()
     makePipes()
 
     const grounds = this.physics.add.staticGroup()
-    const ground = grounds.create(144, 458, 'ground')
+    const ground = grounds.create(widthMiddle, 458, 'ground')
     ground.setDepth(10)
 
     player = this.physics.add.sprite(80, 185, birdName)
@@ -126,19 +135,18 @@ function create() {
     player.anims.play('clap-wings', true)
 
     scoreboard = this.physics.add.staticGroup()
-    scoreboard.create(144, 30, 'number0')
+    scoreboard.create(widthMiddle, 30, 'number0')
 }
 
 function update() {
-    if (gameOver) {
+    if (gameOver)
         return
-    }
 
-    if (framesMoveUp > 0) {
+    if (framesMoveUp > 0)
         framesMoveUp--
-    } else if (Phaser.Input.Keyboard.JustDown(upButton)) {
+    else if (Phaser.Input.Keyboard.JustDown(upButton))
         moveBird()
-    } else {
+    else {
         player.setVelocityY(120)
 
         if (player.angle < 90)
@@ -173,9 +181,9 @@ function hitBird(player) {
 
     player.anims.play('stop')
 
-    this.add.image(144, 206, 'game-over')
+    this.add.image(widthMiddle, 206, 'game-over')
 
-    const restart = this.add.image(144, 300, 'restart-button').setInteractive()
+    const restart = this.add.image(widthMiddle, 300, 'restart-button').setInteractive()
     restart.on('pointerdown', () => alert('soon'))
 }
 
@@ -211,9 +219,8 @@ function makePipes() {
 }
 
 function moveBird() {
-    if (gameOver) {
+    if (gameOver)
         return
-    }
 
     player.setVelocityY(-400)
     player.angle = -15
@@ -223,27 +230,27 @@ function moveBird() {
 function getRandomBird() {
     switch (Phaser.Math.Between(0, 2)) {
         case 0:
-            return 'bird-red'
+            return birdRedName
         case 1:
-            return 'bird-blue'
+            return birdBlueName
         case 2:
         default:
-            return 'bird-yellow'
+            return birdYellowName
     }
 }
 
 function updateScoreboard() {
     scoreboard.clear(true, true)
 
-    var scoreAsString = score.toString()
+    const scoreAsString = score.toString()
     if (scoreAsString.length == 1)
-        scoreboard.create(144, 30, 'number' + score).setDepth(10)
+        scoreboard.create(widthMiddle, 30, 'number' + score).setDepth(10)
     else {
-        var initialPosition = 144 - ((score.toString().length * 25) / 2)
+        let initialPosition = widthMiddle - ((score.toString().length * numberWidth) / 2)
 
-        for (var i = 0; i < scoreAsString.length; i++) {
+        for (let i = 0; i < scoreAsString.length; i++) {
             scoreboard.create(initialPosition, 30, 'number' + scoreAsString[i]).setDepth(10)
-            initialPosition += 25
+            initialPosition += numberWidth
         }
     }
 }
