@@ -184,7 +184,7 @@ function hitBird(player) {
     this.add.image(widthMiddle, 206, 'game-over')
 
     const restart = this.add.image(widthMiddle, 300, 'restart-button').setInteractive()
-    restart.on('pointerdown', () => alert('soon'))
+    restart.on('pointerdown', restartGame)
 }
 
 function updateScore(_, gap) {
@@ -253,4 +253,8 @@ function updateScoreboard() {
             initialPosition += numberWidth
         }
     }
+}
+
+function restartGame() {
+    location.reload()
 }
