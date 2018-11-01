@@ -58,6 +58,10 @@ const assets = {
         number7: 'number7',
         number8: 'number8',
         number9: 'number9'
+    },
+    animation: {
+        clapWings: 'clap-wings',
+        stop: 'stop'
     }
 }
 
@@ -147,7 +151,7 @@ function create() {
     player.setCollideWorldBounds(true)
 
     this.anims.create({
-        key: 'clap-wings',
+        key: assets.animation.clapWings,
         frames: this.anims.generateFrameNumbers(birdName, {
             start: 0,
             end: 2
@@ -157,7 +161,7 @@ function create() {
     })
 
     this.anims.create({
-        key: 'stop',
+        key: assets.animation.stop,
         frames: [{
             key: birdName,
             frame: 1
@@ -172,7 +176,7 @@ function create() {
 
     this.physics.add.overlap(player, gapsGroup, updateScore, null, this)
 
-    player.anims.play('clap-wings', true)
+    player.anims.play(assets.animation.clapWings, true)
 
     scoreboard = this.physics.add.staticGroup()
     scoreboard.create(widthMiddle, 30, assets.scoreboard.number0)
@@ -219,7 +223,7 @@ function hitBird(player) {
 
     gameOver = true
 
-    player.anims.play('stop')
+    player.anims.play(assets.animation.stop)
 
     this.add.image(widthMiddle, 206, assets.scene.gameOver)
 
