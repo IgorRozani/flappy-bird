@@ -82,7 +82,7 @@ let gapsGroup
 let nextPipes = 0
 let currentPipe = assets.obstacle.pipe.green
 // score variables
-let scoreboard
+let scoreboardGroup
 let score = 0
 const numberWidth = 25
 
@@ -178,8 +178,8 @@ function create() {
 
     player.anims.play(assets.animation.clapWings, true)
 
-    scoreboard = this.physics.add.staticGroup()
-    scoreboard.create(widthMiddle, 30, assets.scoreboard.number0)
+    scoreboardGroup = this.physics.add.staticGroup()
+    scoreboardGroup.create(widthMiddle, 30, assets.scoreboard.number0)
 }
 
 function update() {
@@ -283,16 +283,16 @@ function getRandomBird() {
 }
 
 function updateScoreboard() {
-    scoreboard.clear(true, true)
+    scoreboardGroup.clear(true, true)
 
     const scoreAsString = score.toString()
     if (scoreAsString.length == 1)
-        scoreboard.create(widthMiddle, 30, assets.scoreboard.base + score).setDepth(10)
+        scoreboardGroup.create(widthMiddle, 30, assets.scoreboard.base + score).setDepth(10)
     else {
         let initialPosition = widthMiddle - ((score.toString().length * numberWidth) / 2)
 
         for (let i = 0; i < scoreAsString.length; i++) {
-            scoreboard.create(initialPosition, 30, assets.scoreboard.base + scoreAsString[i]).setDepth(10)
+            scoreboardGroup.create(initialPosition, 30, assets.scoreboard.base + scoreAsString[i]).setDepth(10)
             initialPosition += numberWidth
         }
     }
