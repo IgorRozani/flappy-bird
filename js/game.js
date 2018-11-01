@@ -90,7 +90,7 @@ function preload() {
     // Backgrounds and ground
     this.load.image(assets.scene.background.day, 'assets/background-day.png')
     this.load.image(assets.scene.background.night, 'assets/background-night.png')
-    this.load.image(assets.scene.ground, 'assets/base.png')
+    this.load.image(assets.scene.ground, 'assets/ground.png')
 
     // Pipes
     this.load.image(assets.obstacle.pipe.green.top, 'assets/pipe-green-top.png')
