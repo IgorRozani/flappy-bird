@@ -224,12 +224,12 @@ function create() {
 
     gameOverBanner = this.add.image(widthMiddle, 206, assets.scene.gameOver)
     gameOverBanner.setDepth(20)
-    gameOverBanner.visible = false;
+    gameOverBanner.visible = false
 
     restartButton = this.add.image(widthMiddle, 300, assets.scene.restart).setInteractive()
     restartButton.on('pointerdown', restartGame)
     restartButton.setDepth(20)
-    restartButton.visible = false;
+    restartButton.visible = false
 }
 
 function update() {
@@ -275,8 +275,8 @@ function hitBird(player) {
 
     player.anims.play(getAnimationBird(birdName).stop)
 
-    gameOverBanner.visible = true;
-    restartButton.visible = true;
+    gameOverBanner.visible = true
+    restartButton.visible = true
 }
 
 function updateScore(_, gap) {
@@ -364,8 +364,8 @@ function restartGame() {
     gapsGroup.clear(true, true)
     scoreboardGroup.clear(true, true)
     player.destroy()
-    gameOverBanner.visible = false;
-    restartButton.visible = false;
+    gameOverBanner.visible = false
+    restartButton.visible = false
 
     var gameScene = game.scene.scenes[0]
     startGame(gameScene)
