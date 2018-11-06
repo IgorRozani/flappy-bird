@@ -34,8 +34,7 @@ const assets = {
                 top: 'pipe-red-top',
                 bottom: 'pipe-red-bo'
             }
-        },
-        gap: 'gap'
+        }
     },
     scene: {
         background: {
@@ -120,7 +119,6 @@ function preload() {
     this.load.image(assets.obstacle.pipe.green.bottom, 'assets/pipe-green-bottom.png')
     this.load.image(assets.obstacle.pipe.red.top, 'assets/pipe-red-top.png')
     this.load.image(assets.obstacle.pipe.red.bottom, 'assets/pipe-red-bottom.png')
-    this.load.image(assets.obstacle.gap, 'assets/gap.png')
 
     // End game
     this.load.image(assets.scene.gameOver, 'assets/gameover.png')
@@ -285,12 +283,12 @@ function update() {
     });
 
     gapsGroup.children.iterate(function (child) {
-        child.setVelocityX(-100)
+        child.body.setVelocityX(-100)
     });
 
     nextPipes++;
     if (nextPipes === 130) {
-        makePipes()
+        makePipes(game.scene.scenes[0])
         nextPipes = 0
     }
 }
@@ -324,11 +322,13 @@ function updateScore(_, gap) {
     updateScoreboard()
 }
 
-function makePipes() {
+function makePipes(scene) {
     const pipeTopY = Phaser.Math.Between(-120, 120)
 
-    const gap = gapsGroup.create(288, pipeTopY + 210, assets.obstacle.gap, null, false)
+    const gap = scene.add.line(288, pipeTopY + 210, 0, 0, 0, 98)
+    gapsGroup.add(gap)
     gap.body.allowGravity = false
+    gap.visible = false
 
     const pipeTop = pipesGroup.create(288, pipeTopY, currentPipe.top)
     pipeTop.body.allowGravity = false
@@ -420,7 +420,7 @@ function startGame(scene) {
 
     scene.physics.add.overlap(player, gapsGroup, updateScore, null, scene)
 
-    makePipes()
+    makePipes(scene)
 
     scoreboardGroup.create(widthMiddle, 30, assets.scoreboard.number0)
 
