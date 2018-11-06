@@ -73,6 +73,10 @@ const assets = {
                 clapWings: 'yellow-clap-wings',
                 stop: 'yellow-stop'
             }
+        },
+        ground: {
+            moving: 'moving-ground',
+            stop: 'stop-ground'
         }
     }
 }
@@ -91,7 +95,7 @@ let framesMoveUp
 // Background
 let backgroundDay
 let backgroundNight
-let groundsGroup
+let ground
 // pipes
 let pipesGroup
 let gapsGroup
@@ -106,7 +110,10 @@ function preload() {
     // Backgrounds and ground
     this.load.image(assets.scene.background.day, 'assets/background-day.png')
     this.load.image(assets.scene.background.night, 'assets/background-night.png')
-    this.load.image(assets.scene.ground, 'assets/ground.png')
+    this.load.spritesheet(assets.scene.ground, 'assets/ground-sprite.png', {
+        frameWidth: 336,
+        frameHeight: 112
+    })
 
     // Pipes
     this.load.image(assets.obstacle.pipe.green.top, 'assets/pipe-green-top.png')
@@ -157,11 +164,31 @@ function create() {
     pipesGroup = this.physics.add.group()
     scoreboardGroup = this.physics.add.staticGroup()
 
-    groundsGroup = this.physics.add.staticGroup()
-    const ground = groundsGroup.create(widthMiddle, 458, assets.scene.ground)
+    ground = this.physics.add.sprite(widthMiddle, 458, assets.scene.ground)
+    ground.setCollideWorldBounds(true)
     ground.setDepth(10)
 
+
     upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP)
+
+    // Ground animations
+    this.anims.create({
+        key: assets.animation.ground.moving,
+        frames: this.anims.generateFrameNumbers(assets.scene.ground, {
+            start: 0,
+            end: 2
+        }),
+        frameRate: 15,
+        repeat: -1
+    })
+    this.anims.create({
+        key: assets.animation.ground.stop,
+        frames: [{
+            key: assets.scene.ground,
+            frame: 0
+        }],
+        frameRate: 20
+    })
 
     // Red Bird Animations
     this.anims.create({
@@ -274,6 +301,7 @@ function hitBird(player) {
     gameOver = true
 
     player.anims.play(getAnimationBird(birdName).stop)
+    ground.anims.play(assets.animation.ground.stop)
 
     gameOverBanner.visible = true
     restartButton.visible = true
@@ -387,7 +415,7 @@ function startGame(scene) {
     player.setCollideWorldBounds(true)
     player.anims.play(getAnimationBird(birdName).clapWings, true)
 
-    scene.physics.add.collider(player, groundsGroup, hitBird, null, scene)
+    scene.physics.add.collider(player, ground, hitBird, null, scene)
     scene.physics.add.collider(player, pipesGroup, hitBird, null, scene)
 
     scene.physics.add.overlap(player, gapsGroup, updateScore, null, scene)
@@ -395,4 +423,6 @@ function startGame(scene) {
     makePipes()
 
     scoreboardGroup.create(widthMiddle, 30, assets.scoreboard.number0)
+
+    ground.anims.play(assets.animation.ground.moving, true)
 }
