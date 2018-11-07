@@ -1,14 +1,20 @@
 # Flappy Bird ![Flappy Bird](img/favicon.png) 
 A Flappy Bird game in [Phaser 3](https://phaser.io/).
 
-## Demo
 [Check it live!](https://igorrozani.github.io/flappy-bird)
 
-## Game screenshot
+## Table of Contents
+* [Game screenshots](#game-screenshots)
+* [Assets](#assets)
+* [How to run it](#how-to-run-it)
+* [License](#license)
 
+
+## Game screenshots
 ![Main menu](img/print01.png)
 
 *Main menu*
+
 
 ![Playing](img/print02.png)
 
