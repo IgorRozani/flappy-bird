@@ -44,7 +44,8 @@ const assets = {
         },
         ground: 'ground',
         gameOver: 'game-over',
-        restart: 'restart-button'
+        restart: 'restart-button',
+        messageInitial: 'message-initial'
     },
     scoreboard: {
         width: 25,
@@ -85,9 +86,11 @@ const assets = {
 // Game
 const game = new Phaser.Game(config)
 let gameOver
+let gameStarted
 let upButton
 let restartButton
 let gameOverBanner
+let messageInitial
 // Bird
 let player
 let birdName
@@ -119,6 +122,9 @@ function preload() {
     this.load.image(assets.obstacle.pipe.green.bottom, 'assets/pipe-green-bottom.png')
     this.load.image(assets.obstacle.pipe.red.top, 'assets/pipe-red-top.png')
     this.load.image(assets.obstacle.pipe.red.bottom, 'assets/pipe-red-bottom.png')
+
+    // Start game
+    this.load.image(assets.scene.messageInitial, 'assets/message-initial.png')
 
     // End game
     this.load.image(assets.scene.gameOver, 'assets/gameover.png')
@@ -152,9 +158,9 @@ function preload() {
 }
 
 function create() {
-    backgroundDay = this.add.image(assets.scene.width, 256, assets.scene.background.day).setInteractive();
+    backgroundDay = this.add.image(assets.scene.width, 256, assets.scene.background.day).setInteractive()
     backgroundDay.on('pointerdown', moveBird)
-    backgroundNight = this.add.image(assets.scene.width, 256, assets.scene.background.night).setInteractive();
+    backgroundNight = this.add.image(assets.scene.width, 256, assets.scene.background.night).setInteractive()
     backgroundNight.visible = false
     backgroundNight.on('pointerdown', moveBird)
 
@@ -166,6 +172,9 @@ function create() {
     ground.setCollideWorldBounds(true)
     ground.setDepth(10)
 
+    messageInitial = this.add.image(assets.scene.width, 156, assets.scene.messageInitial)
+    messageInitial.setDepth(30)
+    messageInitial.visible = false
 
     upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP)
 
@@ -245,7 +254,7 @@ function create() {
         frameRate: 20
     })
 
-    startGame(this)
+    prepareGame(this)
 
     gameOverBanner = this.add.image(assets.scene.width, 206, assets.scene.gameOver)
     gameOverBanner.setDepth(20)
@@ -258,7 +267,7 @@ function create() {
 }
 
 function update() {
-    if (gameOver)
+    if (gameOver || !gameStarted)
         return
 
     if (framesMoveUp > 0)
@@ -280,13 +289,13 @@ function update() {
             child.destroy()
         else
             child.setVelocityX(-100)
-    });
+    })
 
     gapsGroup.children.iterate(function (child) {
         child.body.setVelocityX(-100)
-    });
+    })
 
-    nextPipes++;
+    nextPipes++
     if (nextPipes === 130) {
         makePipes(game.scene.scenes[0])
         nextPipes = 0
@@ -297,6 +306,7 @@ function hitBird(player) {
     this.physics.pause()
 
     gameOver = true
+    gameStarted = false
 
     player.anims.play(getAnimationBird(birdName).stop)
     ground.anims.play(assets.animation.ground.stop)
@@ -323,6 +333,8 @@ function updateScore(_, gap) {
 }
 
 function makePipes(scene) {
+    if (!gameStarted || gameOver) return
+
     const pipeTopY = Phaser.Math.Between(-120, 120)
 
     const gap = scene.add.line(288, pipeTopY + 210, 0, 0, 0, 98)
@@ -340,6 +352,9 @@ function makePipes(scene) {
 function moveBird() {
     if (gameOver)
         return
+
+    if (!gameStarted)
+        startGame(game.scene.scenes[0])
 
     player.setVelocityY(-400)
     player.angle = -15
@@ -395,13 +410,13 @@ function restartGame() {
     gameOverBanner.visible = false
     restartButton.visible = false
 
-    var gameScene = game.scene.scenes[0]
-    startGame(gameScene)
+    const gameScene = game.scene.scenes[0]
+    prepareGame(gameScene)
 
     gameScene.physics.resume()
 }
 
-function startGame(scene) {
+function prepareGame(scene) {
     framesMoveUp = 0
     nextPipes = 0
     currentPipe = assets.obstacle.pipe.green
@@ -409,20 +424,28 @@ function startGame(scene) {
     gameOver = false
     backgroundDay.visible = true
     backgroundNight.visible = false
+    messageInitial.visible = true
 
     birdName = getRandomBird()
-    player = scene.physics.add.sprite(80, 185, birdName)
+    player = scene.physics.add.sprite(60, 265, birdName)
     player.setCollideWorldBounds(true)
     player.anims.play(getAnimationBird(birdName).clapWings, true)
+    player.body.allowGravity = false
 
     scene.physics.add.collider(player, ground, hitBird, null, scene)
     scene.physics.add.collider(player, pipesGroup, hitBird, null, scene)
 
     scene.physics.add.overlap(player, gapsGroup, updateScore, null, scene)
 
-    makePipes(scene)
-
-    scoreboardGroup.create(assets.scene.width, 30, assets.scoreboard.number0)
-
     ground.anims.play(assets.animation.ground.moving, true)
+}
+
+function startGame(scene) {
+    gameStarted = true
+    messageInitial.visible = false
+
+    const score0 = scoreboardGroup.create(assets.scene.width, 30, assets.scoreboard.number0)
+    score0.setDepth(20)
+
+    makePipes(scene)
 }
