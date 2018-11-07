@@ -6,7 +6,9 @@ A Flappy Bird game in [Phaser 3](https://phaser.io/).
 ## Table of Contents
 * [Game screenshots](#game-screenshots)
 * [Assets](#assets)
-* [How to run it](#how-to-run-it)
+* [How to](#how-to)
+    * [Run it](#run-it)
+    * [Generate documentation](#generate-documentation)
 * [License](#license)
 
 
@@ -27,7 +29,9 @@ A Flappy Bird game in [Phaser 3](https://phaser.io/).
 ## Assets
 The assets used in this project came from the project [FlapPyBird](https://github.com/sourabhv/FlapPyBird) created by [Sourabh Verma](https://github.com/sourabhv).
 
-## How to run it
+## How to 
+
+### Run it
 1. Clone this repository or click Download ZIP in right panel and extract it 
 ```
 git clone https://github.com/IgorRozani/flappy-bird.git 
@@ -40,6 +44,16 @@ npm install http-server -g
 ```
 http-server
 ``` 
+
+### Generate documentation
+1. Install [documentation.js](http://documentation.js.org/)
+```
+npm install -g documentation
+```
+2. Generate game.js documentation
+```
+documentation build js/game.js -f md > docs/game.md
+```
 
 ## License
 

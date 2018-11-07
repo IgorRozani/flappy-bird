@@ -1,7 +1,9 @@
 /**
+ * 
  * Game configurations.
+ * @name configurations
  */
-const config = {
+const configurations = {
     type: Phaser.AUTO,
     width: 288,
     height: 512,
@@ -23,6 +25,7 @@ const config = {
 
 /**
  *  Game assets.
+ *  @name assets
  */
 const assets = {
     bird: {
@@ -90,28 +93,105 @@ const assets = {
 }
 
 // Game
-const game = new Phaser.Game(config)
+/**
+ * The main controller for the entire Phaser game.
+ * @name game
+ * @type {object}
+ */
+const game = new Phaser.Game(configurations)
+/**
+ * If it had happened a game over.
+ * @type {boolean}
+ */
 let gameOver
+/**
+ * If the game has been started.
+ * @type {boolean}
+ */
 let gameStarted
+/**
+ * Up button component.
+ * @type {object}
+ */
 let upButton
+/**
+ * Restart button component.
+ * @type {object}
+ */
 let restartButton
+/**
+ * Game over banner component.
+ * @type {object}
+ */
 let gameOverBanner
+/**
+ * Message initial component.
+ * @type {object}
+ */
 let messageInitial
 // Bird
+/**
+ * Player component.
+ * @type {object}
+ */
 let player
+/**
+ * Bird name asset.
+ * @type {string}
+ */
 let birdName
+/**
+ * Quantity frames to move up.
+ * @type {number}
+ */
 let framesMoveUp
 // Background
+/**
+ * Day background component.
+ * @type {object}
+ */
 let backgroundDay
+/**
+ * Night background component.
+ * @type {object}
+ */
 let backgroundNight
+/**
+ * Ground component.
+ * @type {object}
+ */
 let ground
 // pipes
+/**
+ * Pipes group component.
+ * @type {object}
+ */
 let pipesGroup
+/**
+ * Gaps group component.
+ * @type {object}
+ */
 let gapsGroup
+/**
+ * Counter till next pipes to be created.
+ * @type {number}
+ */
 let nextPipes
+/**
+ * Current pipe asset.
+ * @type {object}
+ */
 let currentPipe
 // score variables
+/**
+ * Scoreboard group component.
+ * @type {object}
+ */
 let scoreboardGroup
+/**
+ * Score counter.
+ * @type {number}
+ */
 let score
 
 /**
@@ -167,7 +247,7 @@ function preload() {
 }
 
 /**
- *   Create game objects (images, groups, sprites and animations).
+ *   Create the game objects (images, groups, sprites and animations).
  */
 function create() {
     backgroundDay = this.add.image(assets.scene.width, 256, assets.scene.background.day).setInteractive()
@@ -319,7 +399,7 @@ function update() {
 
 /**
  *  Bird collision event.
- *  @param player - Game object that collided, in this case the bird 
+ *  @param {object} player - Game object that collided, in this case the bird. 
  */
 function hitBird(player) {
     this.physics.pause()
@@ -336,8 +416,8 @@ function hitBird(player) {
 
 /**
  *   Update the scoreboard.
- *   @param player - Game object that overlapped, in this case the bird (ignored)
- *   @param gap - Game object that was overlapped, in this case the gap
+ *   @param {object} _ - Game object that overlapped, in this case the bird (ignored).
+ *   @param {object} gap - Game object that was overlapped, in this case the gap.
  */
 function updateScore(_, gap) {
     score++
@@ -358,7 +438,7 @@ function updateScore(_, gap) {
 
 /**
  * Create pipes and gap in the game.
- * @param scene - Game scene
+ * @param {object} scene - Game scene.
  */
 function makePipes(scene) {
     if (!gameStarted || gameOver) return
@@ -394,6 +474,7 @@ function moveBird() {
 
 /**
  * Get a random bird color.
+ * @return {string} Bird color asset.
  */
 function getRandomBird() {
     switch (Phaser.Math.Between(0, 2)) {
@@ -409,7 +490,8 @@ function getRandomBird() {
 
 /**
  * Get the animation name from the bird.
- * @param birdColor - Game bird color asset
+ * @param {string} birdColor - Game bird color asset.
+ * @return {object} - Bird animation asset.
  */
 function getAnimationBird(birdColor) {
     switch (birdColor) {
@@ -463,7 +545,7 @@ function restartGame() {
 
 /**
  * Restart all variable and configurations, show main and recreate the bird.
- * @param scene - Game scene
+ * @param {object} scene - Game scene.
  */
 function prepareGame(scene) {
     framesMoveUp = 0
@@ -491,7 +573,7 @@ function prepareGame(scene) {
 
 /**
  * Start the game, create pipes and hide the main menu.
- * @param scene - Game scene
+ * @param {object} scene - Game scene.
  */
 function startGame(scene) {
     gameStarted = true
