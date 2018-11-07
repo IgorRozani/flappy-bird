@@ -37,6 +37,7 @@ const assets = {
         }
     },
     scene: {
+        width: 144,
         background: {
             day: 'background-day',
             night: 'background-night'
@@ -46,6 +47,7 @@ const assets = {
         restart: 'restart-button'
     },
     scoreboard: {
+        width: 25,
         base: 'number',
         number0: 'number0',
         number1: 'number1',
@@ -84,7 +86,6 @@ const assets = {
 const game = new Phaser.Game(config)
 let gameOver
 let upButton
-const widthMiddle = 144
 let restartButton
 let gameOverBanner
 // Bird
@@ -103,7 +104,6 @@ let currentPipe
 // score variables
 let scoreboardGroup
 let score
-const numberWidth = 25
 
 function preload() {
     // Backgrounds and ground
@@ -125,36 +125,36 @@ function preload() {
     this.load.image(assets.scene.restart, 'assets/restart-button.png')
 
     // Birds
-    this.load.spritesheet(assets.bird.red, 'assets/redbird-sprite.png', {
+    this.load.spritesheet(assets.bird.red, 'assets/bird-red-sprite.png', {
         frameWidth: 34,
         frameHeight: 24
     })
-    this.load.spritesheet(assets.bird.blue, 'assets/bluebird-sprite.png', {
+    this.load.spritesheet(assets.bird.blue, 'assets/bird-blue-sprite.png', {
         frameWidth: 34,
         frameHeight: 24
     })
-    this.load.spritesheet(assets.bird.yellow, 'assets/yellowbird-sprite.png', {
+    this.load.spritesheet(assets.bird.yellow, 'assets/bird-yellow-sprite.png', {
         frameWidth: 34,
         frameHeight: 24
     })
 
     // Numbers
-    this.load.image(assets.scoreboard.number0, 'assets/0.png')
-    this.load.image(assets.scoreboard.number1, 'assets/1.png')
-    this.load.image(assets.scoreboard.number2, 'assets/2.png')
-    this.load.image(assets.scoreboard.number3, 'assets/3.png')
-    this.load.image(assets.scoreboard.number4, 'assets/4.png')
-    this.load.image(assets.scoreboard.number5, 'assets/5.png')
-    this.load.image(assets.scoreboard.number6, 'assets/6.png')
-    this.load.image(assets.scoreboard.number7, 'assets/7.png')
-    this.load.image(assets.scoreboard.number8, 'assets/8.png')
-    this.load.image(assets.scoreboard.number9, 'assets/9.png')
+    this.load.image(assets.scoreboard.number0, 'assets/number0.png')
+    this.load.image(assets.scoreboard.number1, 'assets/number1.png')
+    this.load.image(assets.scoreboard.number2, 'assets/number2.png')
+    this.load.image(assets.scoreboard.number3, 'assets/number3.png')
+    this.load.image(assets.scoreboard.number4, 'assets/number4.png')
+    this.load.image(assets.scoreboard.number5, 'assets/number5.png')
+    this.load.image(assets.scoreboard.number6, 'assets/number6.png')
+    this.load.image(assets.scoreboard.number7, 'assets/number7.png')
+    this.load.image(assets.scoreboard.number8, 'assets/number8.png')
+    this.load.image(assets.scoreboard.number9, 'assets/number9.png')
 }
 
 function create() {
-    backgroundDay = this.add.image(widthMiddle, 256, assets.scene.background.day).setInteractive();
+    backgroundDay = this.add.image(assets.scene.width, 256, assets.scene.background.day).setInteractive();
     backgroundDay.on('pointerdown', moveBird)
-    backgroundNight = this.add.image(widthMiddle, 256, assets.scene.background.night).setInteractive();
+    backgroundNight = this.add.image(assets.scene.width, 256, assets.scene.background.night).setInteractive();
     backgroundNight.visible = false
     backgroundNight.on('pointerdown', moveBird)
 
@@ -162,7 +162,7 @@ function create() {
     pipesGroup = this.physics.add.group()
     scoreboardGroup = this.physics.add.staticGroup()
 
-    ground = this.physics.add.sprite(widthMiddle, 458, assets.scene.ground)
+    ground = this.physics.add.sprite(assets.scene.width, 458, assets.scene.ground)
     ground.setCollideWorldBounds(true)
     ground.setDepth(10)
 
@@ -247,11 +247,11 @@ function create() {
 
     startGame(this)
 
-    gameOverBanner = this.add.image(widthMiddle, 206, assets.scene.gameOver)
+    gameOverBanner = this.add.image(assets.scene.width, 206, assets.scene.gameOver)
     gameOverBanner.setDepth(20)
     gameOverBanner.visible = false
 
-    restartButton = this.add.image(widthMiddle, 300, assets.scene.restart).setInteractive()
+    restartButton = this.add.image(assets.scene.width, 300, assets.scene.restart).setInteractive()
     restartButton.on('pointerdown', restartGame)
     restartButton.setDepth(20)
     restartButton.visible = false
@@ -375,13 +375,13 @@ function updateScoreboard() {
 
     const scoreAsString = score.toString()
     if (scoreAsString.length == 1)
-        scoreboardGroup.create(widthMiddle, 30, assets.scoreboard.base + score).setDepth(10)
+        scoreboardGroup.create(assets.scene.width, 30, assets.scoreboard.base + score).setDepth(10)
     else {
-        let initialPosition = widthMiddle - ((score.toString().length * numberWidth) / 2)
+        let initialPosition = assets.scene.width - ((score.toString().length * assets.scoreboard.width) / 2)
 
         for (let i = 0; i < scoreAsString.length; i++) {
             scoreboardGroup.create(initialPosition, 30, assets.scoreboard.base + scoreAsString[i]).setDepth(10)
-            initialPosition += numberWidth
+            initialPosition += assets.scoreboard.width
         }
     }
 }
@@ -422,7 +422,7 @@ function startGame(scene) {
 
     makePipes(scene)
 
-    scoreboardGroup.create(widthMiddle, 30, assets.scoreboard.number0)
+    scoreboardGroup.create(assets.scene.width, 30, assets.scoreboard.number0)
 
     ground.anims.play(assets.animation.ground.moving, true)
 }
