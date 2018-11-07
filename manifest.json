@@ -1,0 +1,17 @@
+{
+    "short_name": "Flappy Bird",
+    "name": "Flappy Bird",
+    "icons": [
+      {
+        "src": "img/favicon.png",
+        "type": "image/png",
+        "sizes": "48x48"
+      }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "description":"Flappy Bird in Phaser 3",
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "scope": "/"
+  }
