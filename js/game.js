@@ -1,3 +1,6 @@
+/**
+ * Game configurations.
+ */
 const config = {
     type: Phaser.AUTO,
     width: 288,
@@ -18,6 +21,9 @@ const config = {
     }
 }
 
+/**
+ *  Game assets.
+ */
 const assets = {
     bird: {
         red: 'bird-red',
@@ -108,6 +114,9 @@ let currentPipe
 let scoreboardGroup
 let score
 
+/**
+ *   Load the game assets.
+ */
 function preload() {
     // Backgrounds and ground
     this.load.image(assets.scene.background.day, 'assets/background-day.png')
@@ -157,6 +166,9 @@ function preload() {
     this.load.image(assets.scoreboard.number9, 'assets/number9.png')
 }
 
+/**
+ *   Create game objects (images, groups, sprites and animations).
+ */
 function create() {
     backgroundDay = this.add.image(assets.scene.width, 256, assets.scene.background.day).setInteractive()
     backgroundDay.on('pointerdown', moveBird)
@@ -266,6 +278,9 @@ function create() {
     restartButton.visible = false
 }
 
+/**
+ *  Update the scene frame by frame, responsible for move and rotate the bird and to create and move the pipes.
+ */
 function update() {
     if (gameOver || !gameStarted)
         return
@@ -302,6 +317,10 @@ function update() {
     }
 }
 
+/**
+ *  Bird collision event.
+ *  @param player - Game object that collided, in this case the bird 
+ */
 function hitBird(player) {
     this.physics.pause()
 
@@ -315,6 +334,11 @@ function hitBird(player) {
     restartButton.visible = true
 }
 
+/**
+ *   Update the scoreboard.
+ *   @param player - Game object that overlapped, in this case the bird (ignored)
+ *   @param gap - Game object that was overlapped, in this case the gap
+ */
 function updateScore(_, gap) {
     score++
     gap.destroy()
@@ -332,6 +356,10 @@ function updateScore(_, gap) {
     updateScoreboard()
 }
 
+/**
+ * Create pipes and gap in the game.
+ * @param scene - Game scene
+ */
 function makePipes(scene) {
     if (!gameStarted || gameOver) return
 
@@ -349,6 +377,9 @@ function makePipes(scene) {
     pipeBottom.body.allowGravity = false
 }
 
+/**
+ * Move the bird in the screen.
+ */
 function moveBird() {
     if (gameOver)
         return
@@ -361,6 +392,9 @@ function moveBird() {
     framesMoveUp = 5
 }
 
+/**
+ * Get a random bird color.
+ */
 function getRandomBird() {
     switch (Phaser.Math.Between(0, 2)) {
         case 0:
@@ -373,8 +407,12 @@ function getRandomBird() {
     }
 }
 
-function getAnimationBird(bird) {
-    switch (bird) {
+/**
+ * Get the animation name from the bird.
+ * @param birdColor - Game bird color asset
+ */
+function getAnimationBird(birdColor) {
+    switch (birdColor) {
         case assets.bird.red:
             return assets.animation.bird.red
         case assets.bird.blue:
@@ -385,6 +423,9 @@ function getAnimationBird(bird) {
     }
 }
 
+/**
+ * Update the game scoreboard.
+ */
 function updateScoreboard() {
     scoreboardGroup.clear(true, true)
 
@@ -401,6 +442,10 @@ function updateScoreboard() {
     }
 }
 
+/**
+ * Restart the game. 
+ * Clean all groups, hide game over objects and stop game physics.
+ */
 function restartGame() {
     pipesGroup.clear(true, true)
     pipesGroup.clear(true, true)
@@ -416,6 +461,10 @@ function restartGame() {
     gameScene.physics.resume()
 }
 
+/**
+ * Restart all variable and configurations, show main and recreate the bird.
+ * @param scene - Game scene
+ */
 function prepareGame(scene) {
     framesMoveUp = 0
     nextPipes = 0
@@ -440,6 +489,10 @@ function prepareGame(scene) {
     ground.anims.play(assets.animation.ground.moving, true)
 }
 
+/**
+ * Start the game, create pipes and hide the main menu.
+ * @param scene - Game scene
+ */
 function startGame(scene) {
     gameStarted = true
     messageInitial.visible = false
