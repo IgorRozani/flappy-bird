@@ -9,6 +9,7 @@ A Flappy Bird game in [Phaser 3](https://phaser.io/).
 * [How to](#how-to)
     * [Run it](#run-it)
     * [Generate documentation](#generate-documentation)
+* [Wiki](#wiki)
 * [License](#license)
 
 
@@ -54,6 +55,9 @@ npm install -g documentation
 ```
 documentation build js/game.js -f md > docs/game.md
 ```
+
+## Wiki
+We have a wiki, [check it](https://github.com/IgorRozani/flappy-bird/wiki/Wiki).
 
 ## License
 
